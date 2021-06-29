@@ -1,0 +1,33 @@
+{
+  "name": "breathalyzer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "prettify": "prettier --write \"*.js\""
+  },
+  "author": "yuvarajsomavamshi@gmail.com",
+  "license": "ISC",
+  "bin": "index.js",
+  "pkg": {
+    "assets": [
+      "node_modules",
+      "*.js",
+      "*.txt"
+    ],
+    "targets": [
+      "node10-win-x64"
+    ]
+  },
+  "dependencies": {
+    "cron": "^1.8.2",
+    "fs-extra": "^8.1.0",
+    "log4js": "^6.3.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "husky": "^5.1.1",
+    "prettier": "^2.2.1"
+  }
+}
