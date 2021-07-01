@@ -1,0 +1,9 @@
+Step 1: Build the exe file using 
+            - sh build-win.sh 
+            or
+            - sh build-rasp.sh 
+
+Step 2: Windows -
+        Install inno setup https://jrsoftware.org/isdl.php
+
+Step 3: Import breathalyzer.iss file and generate a build

@@ -17,7 +17,8 @@
       "*.txt"
     ],
     "targets": [
-      "node10-win-x64"
+      "node10-win-x64",
+      "node10-linux-armv7"
     ]
   },
   "dependencies": {

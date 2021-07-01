@@ -1,8 +1,9 @@
 const CronJob = require("cron").CronJob;
 const path = require("path");
 const log4js = require("log4js");
-let source, destination;
-let defaultPath = "C://Data";
+let source, destination, raman;
+let defaultPath = process.env.DATA_FOLDER || "C://Data";
+const chokidar = require("chokidar");
 
 log4js.configure({
   appenders: {
@@ -54,9 +55,20 @@ function readInputs() {
   return new Promise((resolve) => {
     source = process.env.SETUP_SEER_DIR;
     destination = process.env.SETUP_PROCESSED_DIR;
+    raman = process.env.SETUP_SEER_RAMAN;
     global.sourcePath = (source && path.join(source)) || path.resolve(defaultPath);
     global.destinationPath = (destination && path.join(destination)) || path.resolve(defaultPath + "//processed");
     global.unprocessed = path.join(global.destinationPath, "../unprocessed");
+    global.raman = path.join(raman, "../raman");
     resolve();
   });
 }
+
+const watcher = chokidar.watch(path.resolve(global.raman), { ignored: /^\./, persistent: true });
+watcher
+  .on("add", function (path) {
+    console.log("File", path, "has been added");
+  })
+  .on("error", function (error) {
+    console.error("Error happened", error);
+  });

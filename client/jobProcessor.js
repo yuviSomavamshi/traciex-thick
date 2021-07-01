@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const fsExtra = require("fs-extra");
 const request = require("request");
-const BC = "http://healthx.southeastasia.cloudapp.azure.com/api/v1/bc/upload-diagnosis-report";
+const BC = "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report";
 
 module.exports = function () {
   process.stdout.write(".");
@@ -54,7 +54,7 @@ function processFile(location, name, date) {
       payload.machine_id = payload.machine_id.replace(/[()]/g, "");
       global.logger.debug("Uploading payload:", JSON.stringify(payload));
       payload.startTime = new Date().getTime();
-      payload.key = "3453454343";
+      payload.key = process.env.API_KEY||"3453454343";
       request(
         {
           url: BC,
