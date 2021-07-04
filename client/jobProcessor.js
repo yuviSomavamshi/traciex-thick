@@ -3,6 +3,13 @@ const path = require("path");
 const fsExtra = require("fs-extra");
 const request = require("request");
 const BC = "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report";
+const https = require("https");
+const keepAliveAgent = new https.Agent({
+  rejectUnauthorized: false,
+  maxSockets: 40,
+  keepAlive: true,
+  maxFreeSockets: 20
+});
 
 module.exports = function () {
   process.stdout.write(".");
@@ -45,6 +52,48 @@ module.exports = function () {
     });
 };
 
+function sendRequest(payload, date) {
+  return new Promise((resolve) => {
+    const options = {
+      url: BC,
+      method: "POST",
+      json: payload,
+      timeout: 5000,
+      strictSSL: false,
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": JSON.stringify(payload).length,
+        Accept: "application/json",
+        "Accept-Charset": "utf-8",
+        ...BC_HEADERS
+      },
+      agent: keepAliveAgent,
+      time: true
+    };
+    request(options, function (err, response, body) {
+      if (err) {
+        global.logger.error("error occured", err);
+        let newPath = path.join(global.unprocessed, name);
+        global.logger.debug("Moving file to ", newPath);
+        fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+        global.logger.debug("The file has been moved to ", newPath);
+      } else {
+        global.logger.debug("Received response from BC, StatusCode:", body._status, ",ResponeTime:", new Date().getTime() - payload.startTime + "ms");
+        if (body._status == 201) {
+          let newPath = path.join(global.destinationPath, date, name);
+          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+        } else {
+          let newPath = path.join(global.unprocessed, name);
+          global.logger.debug("Moving file to ", newPath);
+          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+          global.logger.debug("The file has been moved to ", newPath);
+        }
+      }
+      resolve({ statusCode: response.statusCode, body });
+    });
+  });
+}
+
 function processFile(location, name, date) {
   let currFilePath = path.join(location, name);
   fs.createReadStream(currFilePath).on("data", (data) => {
@@ -54,40 +103,8 @@ function processFile(location, name, date) {
       payload.machine_id = payload.machine_id.replace(/[()]/g, "");
       global.logger.debug("Uploading payload:", JSON.stringify(payload));
       payload.startTime = new Date().getTime();
-      payload.key = process.env.API_KEY||"3453454343";
-      request(
-        {
-          url: BC,
-          method: "POST",
-          json: payload,
-          timeout: 5000
-        },
-        (err, response) => {
-          if (err) {
-            global.logger.error("error occured", err);
-            let newPath = path.join(global.unprocessed, name);
-            global.logger.debug("Moving file to ", newPath);
-            fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-            global.logger.debug("The file has been moved to ", newPath);
-          } else {
-            global.logger.debug(
-              "Received response from BC, StatusCode:",
-              response.body._status,
-              ",ResponeTime:",
-              new Date().getTime() - payload.startTime + "ms"
-            );
-            if (response.body._status == 201) {
-              let newPath = path.join(global.destinationPath, date, name);
-              fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-            } else {
-              let newPath = path.join(global.unprocessed, name);
-              global.logger.debug("Moving file to ", newPath);
-              fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-              global.logger.debug("The file has been moved to ", newPath);
-            }
-          }
-        }
-      );
+      payload.key = process.env.API_KEY || "3453454343";
+      sendRequest(payload, date);
     } catch (error) {
       global.logger.error("Critical error occured, Please Contact Admin ", error);
     }
