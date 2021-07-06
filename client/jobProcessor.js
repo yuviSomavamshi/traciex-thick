@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const fsExtra = require("fs-extra");
 const request = require("request");
+const mkdirp = require("mkdirp");
 const BC = "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report";
 const https = require("https");
 const keepAliveAgent = new https.Agent({
@@ -12,7 +13,6 @@ const keepAliveAgent = new https.Agent({
 });
 
 module.exports = function () {
-  process.stdout.write(".");
   global.logger.debug("running a task every 10 second ");
 
   // Function to get the filenames present
@@ -48,7 +48,11 @@ module.exports = function () {
       }
     })
     .catch((err) => {
-      console.error("error while read file ", err);
+      if(err.errno == -4058){
+        mkdirp.sync(location);
+      }else{
+        console.error("error while read file ", err);
+      }
     });
 };
 

@@ -4,6 +4,7 @@ const log4js = require("log4js");
 let source, destination, raman;
 let defaultPath = process.env.DATA_FOLDER || "C://Data";
 const chokidar = require("chokidar");
+const whiteboard = require("./lib/whiteboad");
 
 log4js.configure({
   appenders: {
@@ -42,23 +43,30 @@ readInputs().then(() => {
     .on("error", function (error) {
       console.error("Error happened", error);
     });
-
-  process.stdout.write("Process started...");
+  whiteboard.init({
+      host: "52.237.82.94",
+      port: 6379,
+      db: 0,
+      password: "HealthX!Chain123BLR"
+  });
+  whiteboard.subscribe("mount_file");
+  whiteboard.subscribe("unmount_file");
+  global.logger.info("Process started...");
 });
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 process.on("uncaughtException", (e) => {
-  console.error("Uncaught Expection", e);
+  global.logger.error("Uncaught Expection", e);
 });
 
 process.on("unhandledRejection", (reason, p) => {
-  console.error("Unhandled Expection", reason, p);
+  global.logger.error("Unhandled Expection", reason, p);
 });
 
 function shutdown() {
-  console.error("Received kill signal. Initiating shutdown...");
+  global.logger.error("Received kill signal. Initiating shutdown...");
   process.exit(1);
 }
 
@@ -75,3 +83,8 @@ function readInputs() {
     resolve();
   });
 }
+
+
+whiteboard.on("mount_file", data=>{
+  global.logger.info("Downloaded successfully",data);
+});
