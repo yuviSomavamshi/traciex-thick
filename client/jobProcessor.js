@@ -48,9 +48,9 @@ module.exports = function () {
       }
     })
     .catch((err) => {
-      if(err.errno == -4058){
+      if (err.errno == -4058) {
         mkdirp.sync(location);
-      }else{
+      } else {
         console.error("error while read file ", err);
       }
     });

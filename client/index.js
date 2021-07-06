@@ -44,10 +44,10 @@ readInputs().then(() => {
       console.error("Error happened", error);
     });
   whiteboard.init({
-      host: "52.237.82.94",
-      port: 6379,
-      db: 0,
-      password: "HealthX!Chain123BLR"
+    host: "52.237.82.94",
+    port: 6379,
+    db: 0,
+    password: "HealthX!Chain123BLR"
   });
   whiteboard.subscribe("mount_file");
   whiteboard.subscribe("unmount_file");
@@ -84,7 +84,6 @@ function readInputs() {
   });
 }
 
-
-whiteboard.on("mount_file", data=>{
-  global.logger.info("Downloaded successfully",data);
+whiteboard.on("mount_file", (data) => {
+  global.logger.info("Downloaded successfully", data);
 });
