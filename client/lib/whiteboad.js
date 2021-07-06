@@ -20,7 +20,7 @@ class Whiteboard extends EventEmitter {
     this.opts = opts;
     let connection = await redis_man.getConnection(WBSUBSCRIBE);
     connection.on("message", (channel, data) => {
-      global.logger.error("WB: Channel:", channel, ", message:", data);
+      console.error("WB: Channel:", channel, ", message:", data);
       if (typeof data == "string") {
         try {
           data = JSON.parse(data);
@@ -37,17 +37,17 @@ class Whiteboard extends EventEmitter {
     let data = { code: event, message: message };
     let connection = await redis_man.getConnection(WBPUBLISH);
     connection.publish(event, JSON.stringify(data));
-    global.logger.info("WB: Published message to an event:%s", event);
+    console.info("WB: Published message to an event:%s", event);
   }
 
   async subscribe(event) {
     try {
       let connection = await redis_man.getConnection(WBSUBSCRIBE);
       connection.subscribe(event, () => {
-        global.logger.info("WB: Subscribed to an event:%s", event);
+        console.info("WB: Subscribed to an event:%s", event);
       });
     } catch (e) {
-      global.logger.error("Failed to subscriber to an Event:", event, e);
+      console.error("Failed to subscriber to an Event:", event, e);
     }
   }
 
