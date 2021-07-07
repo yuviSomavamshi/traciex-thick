@@ -5,6 +5,7 @@ const request = require("request");
 const mkdirp = require("mkdirp");
 const BC = "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report";
 const https = require("https");
+const API_KEY = require("./lib/api_key");
 const keepAliveAgent = new https.Agent({
   rejectUnauthorized: false,
   maxSockets: 40,
@@ -69,7 +70,7 @@ function sendRequest(payload, date) {
         "Content-Length": JSON.stringify(payload).length,
         Accept: "application/json",
         "Accept-Charset": "utf-8",
-        ...BC_HEADERS
+        "x-api-key": API_KEY.getKey()
       },
       agent: keepAliveAgent,
       time: true
@@ -107,7 +108,6 @@ function processFile(location, name, date) {
       payload.machine_id = payload.machine_id.replace(/[()]/g, "");
       global.logger.debug("Uploading payload:", JSON.stringify(payload));
       payload.startTime = new Date().getTime();
-      payload.key = process.env.API_KEY || "3453454343";
       sendRequest(payload, date);
     } catch (error) {
       global.logger.error("Critical error occured, Please Contact Admin ", error);

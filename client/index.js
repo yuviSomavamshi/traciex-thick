@@ -17,7 +17,7 @@ log4js.configure({
 global.logger = log4js.getLogger();
 global.logger.info("Version:" + require("./package.json").version);
 
-readInputs().then(async () => {
+readInputs().then( () => {
   try {
     if (global.sourcePath == global.destinationPath) {
       global.destinationPath = path.join(global.destinationPath, "processed");
@@ -49,13 +49,8 @@ readInputs().then(async () => {
     db: 0,
     password: "HealthX!Chain123BLR"
   });
-await  whiteboard.subscribe("mount_file");
-await whiteboard.subscribe("unmount_file");
   
-whiteboard.on("mount_file", (data) => {
-  global.logger.info("Downloaded successfully", typeof data);
-});
-
+  whiteboard.subscribe("mount_file");
   global.logger.info("Process started...");
 });
 
