@@ -2,6 +2,8 @@ const request = require("request");
 const https = require("https");
 const path = require("path");
 const fs = require("fs");
+const fsExtra = require("fs-extra");
+
 const API_KEY = require("./api_key");
 
 const keepAliveAgent = new https.Agent({
@@ -46,6 +48,49 @@ function downloadFile(payload) {
   });
 }
 
+function uploadDiagnosis(payload, date, name, currFilePath) {
+  return new Promise((resolve) => {
+    const options = {
+      url: "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report",
+      method: "POST",
+      json: payload,
+      timeout: 5000,
+      strictSSL: false,
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": JSON.stringify(payload).length,
+        Accept: "application/json",
+        "Accept-Charset": "utf-8",
+        "x-api-key": API_KEY.getKey()
+      },
+      agent: keepAliveAgent,
+      time: true
+    };
+    request(options, function (err, response, body) {
+      if (err) {
+        global.logger.error("error occured", err);
+        let newPath = path.join(global.unprocessed, name);
+        global.logger.debug("Moving file to ", newPath);
+        fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+        global.logger.debug("The file has been moved to ", newPath);
+      } else {
+        global.logger.debug("Received response from BC, StatusCode:", body._status, ",ResponeTime:", new Date().getTime() - payload.startTime + "ms");
+        if (body._status == 201) {
+          let newPath = path.join(global.destinationPath, date, name);
+          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+        } else {
+          let newPath = path.join(global.unprocessed, name);
+          global.logger.debug("Moving file to ", newPath);
+          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
+          global.logger.debug("The file has been moved to ", newPath);
+        }
+      }
+      resolve({ statusCode: response.statusCode, body });
+    });
+  });
+}
+
 module.exports = {
-  downloadFile
+  downloadFile,
+  uploadDiagnosis
 };

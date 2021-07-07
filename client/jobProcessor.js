@@ -1,17 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const fsExtra = require("fs-extra");
-const request = require("request");
 const mkdirp = require("mkdirp");
-const BC = "https://traciex.healthx.global/api/v1/bc/upload-diagnosis-report";
-const https = require("https");
-const API_KEY = require("./lib/api_key");
-const keepAliveAgent = new https.Agent({
-  rejectUnauthorized: false,
-  maxSockets: 40,
-  keepAlive: true,
-  maxFreeSockets: 20
-});
+const apiService = require("./lib/api_service");
 
 module.exports = function () {
   global.logger.debug("running a task every 10 second ");
@@ -57,48 +47,6 @@ module.exports = function () {
     });
 };
 
-function sendRequest(payload, date) {
-  return new Promise((resolve) => {
-    const options = {
-      url: BC,
-      method: "POST",
-      json: payload,
-      timeout: 5000,
-      strictSSL: false,
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": JSON.stringify(payload).length,
-        Accept: "application/json",
-        "Accept-Charset": "utf-8",
-        "x-api-key": API_KEY.getKey()
-      },
-      agent: keepAliveAgent,
-      time: true
-    };
-    request(options, function (err, response, body) {
-      if (err) {
-        global.logger.error("error occured", err);
-        let newPath = path.join(global.unprocessed, name);
-        global.logger.debug("Moving file to ", newPath);
-        fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-        global.logger.debug("The file has been moved to ", newPath);
-      } else {
-        global.logger.debug("Received response from BC, StatusCode:", body._status, ",ResponeTime:", new Date().getTime() - payload.startTime + "ms");
-        if (body._status == 201) {
-          let newPath = path.join(global.destinationPath, date, name);
-          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-        } else {
-          let newPath = path.join(global.unprocessed, name);
-          global.logger.debug("Moving file to ", newPath);
-          fsExtra.moveSync(currFilePath, newPath, { overwrite: true });
-          global.logger.debug("The file has been moved to ", newPath);
-        }
-      }
-      resolve({ statusCode: response.statusCode, body });
-    });
-  });
-}
-
 function processFile(location, name, date) {
   let currFilePath = path.join(location, name);
   fs.createReadStream(currFilePath).on("data", (data) => {
@@ -108,7 +56,7 @@ function processFile(location, name, date) {
       payload.machine_id = payload.machine_id.replace(/[()]/g, "");
       global.logger.debug("Uploading payload:", JSON.stringify(payload));
       payload.startTime = new Date().getTime();
-      sendRequest(payload, date);
+      apiService.uploadDiagnosis(payload, date, name, currFilePath);
     } catch (error) {
       global.logger.error("Critical error occured, Please Contact Admin ", error);
     }

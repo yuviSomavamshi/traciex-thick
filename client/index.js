@@ -75,7 +75,6 @@ function readInputs() {
   return new Promise((resolve) => {
     source = process.env.SETUP_SEER_DIR;
     destination = process.env.SETUP_PROCESSED_DIR;
-    console.log(destination, path.join(defaultPath, "processed"));
     global.sourcePath = (source && path.join(source)) || path.resolve(defaultPath);
     global.destinationPath = (destination && path.join(destination)) || path.join(defaultPath, "processed");
     global.unprocessed = path.join(global.destinationPath, "../unprocessed");
