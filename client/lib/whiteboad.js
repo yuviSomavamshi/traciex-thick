@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const redis_man = require("./redis_man");
-const API_KEY = require("./api_key");
+const apiService = require("./api_service");
 const WB = "whiteboard";
 const WBPUBLISH = "WBPUBLISH";
 const WBSUBSCRIBE = "WBSUBSCRIBE";
@@ -26,13 +26,13 @@ class Whiteboard extends EventEmitter {
         try {
           data = JSON.parse(data);
         } catch (error) {
-          data = { code: channel, message: data }
+          data = { code: channel, message: data };
         }
       }
-      switch(data.code){
+      switch (data.code) {
         case "mount_file":
-downloadFile(data.message);
-        break;
+          apiService.downloadFile(data.message);
+          break;
       }
     });
     connection = await redis_man.getConnection(WBPUBLISH);
@@ -45,9 +45,8 @@ downloadFile(data.message);
     console.info("WB: Published message to an event:%s", event);
   }
 
-   subscribe(event) {
-
-    return new Promise(async (resolve, reject)=>{
+  subscribe(event) {
+    return new Promise(async (resolve, reject) => {
       try {
         let connection = await redis_man.getConnection(WBSUBSCRIBE);
         connection.subscribe(event, () => {
@@ -59,45 +58,7 @@ downloadFile(data.message);
         reject(e);
       }
     });
-    
   }
-
 }
 
 module.exports = new Whiteboard();
-
-const request = require("request");
-const https = require("https");
-const keepAliveAgent = new https.Agent({
-  rejectUnauthorized: false,
-  maxSockets: 40,
-  keepAlive: true,
-  maxFreeSockets: 20
-});
-
-
-function downloadFile(payload) {
-  return new Promise((resolve) => {
-    const options = {
-      url: "https://traciex.healthx.global/api/v1/raman/download",
-      method: "POST",
-      json: {filename: payload.file},
-      timeout: 5000,
-      strictSSL: false,
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": JSON.stringify(payload).length,
-        Accept: "application/json",
-        "Accept-Charset": "utf-8",
-        "x-api-key": API_KEY.getKey()
-      },
-//      agent: keepAliveAgent,
-//      time: true
-    };
-    console.log(options);
-    request(options, function (err, response, body) {
-      console.log(err);
-      resolve({ statusCode: response.statusCode, body });
-    });
-  });
-}

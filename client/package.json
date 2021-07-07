@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./index.js",
     "start:dev": "nodemon ./index.js",
-    "prettify": "prettier --write \"*.js\""
+    "prettify": "prettier --ignore-path \"./.prettierignore\" --write \"./**/*.{js,jsx,json}\""
   },
   "author": "yuvarajsomavamshi@gmail.com",
   "license": "ISC",
@@ -18,8 +18,7 @@
       "*.txt"
     ],
     "targets": [
-      "node10-win-x64",
-      "node10-linux-armv7"
+      "node10-win-x64"
     ]
   },
   "dependencies": {

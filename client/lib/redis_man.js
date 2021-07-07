@@ -23,8 +23,8 @@ module.exports = {
     redisPool[props.key] = {
       config: props.config,
       oid: props.oid,
-      redis: null,    // initial value, when no connection is yet attempted.
-      status: 0       // status of connection.
+      redis: null, // initial value, when no connection is yet attempted.
+      status: 0 // status of connection.
     };
     console.warn("Register redisprop(" + props.key + ") " + JSON.stringify(redisPool[props.key]));
   },
@@ -61,7 +61,7 @@ module.exports = {
 
   health: () => {
     let report = {};
-    Object.keys(redisPool).forEach(key => {
+    Object.keys(redisPool).forEach((key) => {
       report[key] = redisPool[key].status == 1 ? "OK" : "KO";
     });
     return report;

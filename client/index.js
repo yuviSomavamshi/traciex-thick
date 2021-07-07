@@ -5,6 +5,7 @@ let source, destination, raman;
 let defaultPath = process.env.DATA_FOLDER || "C://Data";
 const chokidar = require("chokidar");
 const whiteboard = require("./lib/whiteboad");
+const mkdirp = require("mkdirp");
 
 log4js.configure({
   appenders: {
@@ -17,7 +18,7 @@ log4js.configure({
 global.logger = log4js.getLogger();
 global.logger.info("Version:" + require("./package.json").version);
 
-readInputs().then( () => {
+readInputs().then(() => {
   try {
     if (global.sourcePath == global.destinationPath) {
       global.destinationPath = path.join(global.destinationPath, "processed");
@@ -49,7 +50,7 @@ readInputs().then( () => {
     db: 0,
     password: "HealthX!Chain123BLR"
   });
-  
+
   whiteboard.subscribe("mount_file");
   global.logger.info("Process started...");
 });
@@ -74,12 +75,21 @@ function readInputs() {
   return new Promise((resolve) => {
     source = process.env.SETUP_SEER_DIR;
     destination = process.env.SETUP_PROCESSED_DIR;
+    console.log(destination, path.join(defaultPath, "processed"));
     global.sourcePath = (source && path.join(source)) || path.resolve(defaultPath);
-    global.destinationPath = (destination && path.join(destination)) || path.resolve(defaultPath + "//processed");
+    global.destinationPath = (destination && path.join(destination)) || path.join(defaultPath, "processed");
     global.unprocessed = path.join(global.destinationPath, "../unprocessed");
 
-    raman = (process.env.SETUP_SEER_RAMAN && path.resolve(process.env.SETUP_SEER_RAMAN)) || global.sourcePath;
-    global.raman = path.join(raman, "../raman");
+    raman = (process.env.SETUP_SEER_RAMAN && path.resolve(process.env.SETUP_SEER_RAMAN)) || path.join(global.sourcePath, "raman");
+    global.raman = path.resolve(raman);
+    console.log(`Source path      : ${global.sourcePath}`);
+    console.log(`Destination path : ${global.destinationPath}`);
+    console.log(`Unprocessed path : ${global.unprocessed}`);
+    console.log(`Raman CSV path   : ${global.raman}`);
+    mkdirp.sync(global.raman);
+    mkdirp.sync(global.destinationPath);
+    mkdirp.sync(global.sourcePath);
+    mkdirp.sync(global.unprocessed);
     resolve();
   });
 }
