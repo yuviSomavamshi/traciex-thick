@@ -49,7 +49,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ;Source: ""C:\Users\yuvar\Workspace\healthx\traciex-thick\images\msie-app-secure.hta"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\yuvar\Workspace\breathalyzer_be\build\*"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\build\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
