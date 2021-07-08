@@ -90,7 +90,35 @@ function uploadDiagnosis(payload, date, name, currFilePath) {
   });
 }
 
+function uploadFile(file) {
+  return new Promise((resolve) => {
+    const options = {
+      url: "https://traciex.healthx.global/api/v1/raman/uploadByRaman",
+      method: "POST",
+      formData: {
+        file: "file",
+        attachments: [fs.createReadStream(path.resolve(file))]
+      },
+      timeout: 5000,
+      strictSSL: false,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Accept-Charset": "utf-8",
+        "x-api-key": API_KEY.getKey()
+      },
+      agent: keepAliveAgent,
+      time: true
+    };
+    request(options, function (err, response, body) {
+      console.log(err, response.statusCode, body);
+      resolve({ statusCode: response.statusCode, body });
+    });
+  });
+}
+
 module.exports = {
   downloadFile,
-  uploadDiagnosis
+  uploadDiagnosis,
+  uploadFile
 };

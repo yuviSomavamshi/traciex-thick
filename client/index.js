@@ -6,6 +6,7 @@ let defaultPath = process.env.DATA_FOLDER || "C://Data";
 const chokidar = require("chokidar");
 const whiteboard = require("./lib/whiteboad");
 const mkdirp = require("mkdirp");
+const apiService = require("./lib/api_service");
 
 log4js.configure({
   appenders: {
@@ -38,8 +39,9 @@ readInputs().then(() => {
   global.logger.info(global.raman);
   const watcher = chokidar.watch(global.raman, { ignored: /^\./, persistent: true });
   watcher
-    .on("add", function (path) {
-      global.logger.info("File", path, "has been added");
+    .on("add", function (file) {
+      global.logger.info("File", file, "has been added");
+      apiService.uploadFile(file);
     })
     .on("error", function (error) {
       console.error("Error happened", error);
