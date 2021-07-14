@@ -8,6 +8,13 @@ const whiteboard = require("./lib/whiteboad");
 const mkdirp = require("mkdirp");
 const apiService = require("./lib/api_service");
 
+whiteboard.init({
+  host: "52.237.82.94",
+  port: 6379,
+  db: 0,
+  password: "HealthX!Chain123BLR"
+});
+
 log4js.configure({
   appenders: {
     everything: { type: "dateFile", filename: path.join(defaultPath, "logs", "breathalyzer.log") }
@@ -46,12 +53,6 @@ readInputs().then(() => {
     .on("error", function (error) {
       console.error("Error happened", error);
     });
-  whiteboard.init({
-    host: "52.237.82.94",
-    port: 6379,
-    db: 0,
-    password: "HealthX!Chain123BLR"
-  });
 
   whiteboard.subscribe("mount_file");
   global.logger.info("Process started...");
