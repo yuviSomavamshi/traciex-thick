@@ -92,6 +92,7 @@ function uploadDiagnosis(payload, date, name, currFilePath) {
 
 function uploadFile(file) {
   return new Promise((resolve) => {
+    global.logger.info(`Uploading file:${file}`);
     request(
       {
         url: "https://traciex.healthx.global/api/v1/raman/uploadByRaman",
@@ -113,6 +114,7 @@ function uploadFile(file) {
         time: true
       },
       function (err, response, body) {
+        global.logger.trace(`File upload statuscode:${response.statusCode}`);
         resolve({ statusCode: response.statusCode, body });
       }
     );

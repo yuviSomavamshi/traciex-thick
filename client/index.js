@@ -48,7 +48,7 @@ readInputs().then(() => {
   watcher
     .on("add", function (file) {
       global.logger.info("File", file, "has been added");
-      apiService.uploadFile(file);
+      !file.includes("raman-results") && apiService.uploadFile(file);
     })
     .on("error", function (error) {
       console.error("Error happened", error);
