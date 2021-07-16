@@ -18,7 +18,7 @@ AppId={{71B7BE4F-9FB2-407D-B78E-0312954A542A}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher=Healthx Singapore
-AppPublisherURL=https://traciex.healthx.globa
+AppPublisherURL=https://traciex.healthx.global
 AppSupportURL=https://traciex.healthx.global
 AppUpdatesURL=https://traciex.healthx.global
 AppCopyright=(c) Copyright Healthx Singapore, All rights reserved
@@ -27,11 +27,11 @@ DefaultDirName=C:\Program Files\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputBaseFilename=Breathalyzer-ThickClient-{#MyAppVersion}
-;SetupIconFile="C:\Users\yuvar\Workspace\healthx\traciex-thick\images\HealthX.ico
+;SetupIconFile="D:\Workspace\nviera\traciex-thick\\images\HealthX.ico
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-;WizardImageFile="C:\Users\yuvar\Workspace\healthx\traciex-thick\images\untitled.bmp
+;WizardImageFile="D:\Workspace\nviera\traciex-thick\\images\untitled.bmp
 UninstallFilesDir={app}\Uninstall
 DisableWelcomePage=yes
 
@@ -45,11 +45,11 @@ Name: "{app}\{#MyUninstallerName}"; Filename: "{app}\Uninstall\unins000.exe"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-;Source: ""C:\Users\yuvar\Workspace\healthx\traciex-thick\images\msie-app.hta"; DestDir: "{app}"; Flags: ignoreversion
-;Source: ""C:\Users\yuvar\Workspace\healthx\traciex-thick\images\msie-app-secure.hta"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\yuvar\Workspace\healthx\traciex-thick\build\*.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: ""D:\Workspace\nviera\traciex-thick\images\msie-app.hta"; DestDir: "{app}"; Flags: ignoreversion
+;Source: ""D:\Workspace\nviera\traciex-thick\images\msie-app-secure.hta"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Workspace\nviera\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Workspace\nviera\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Workspace\nviera\traciex-thick\build\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

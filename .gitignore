@@ -104,4 +104,6 @@ dist
 .tern-port
 *.zip
 *.rar
-*.exe
+build/*.exe
+
+Output/*.exe

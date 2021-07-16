@@ -1,4 +1,5 @@
 start=`date +%s`
+npm i -g pkg
 mkdir -p build;
 cd client;
 npm i;
