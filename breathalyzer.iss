@@ -48,7 +48,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 ;Source: ""D:\Workspace\nviera\traciex-thick\images\msie-app.hta"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: ""D:\Workspace\nviera\traciex-thick\images\msie-app-secure.hta"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Workspace\nviera\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Workspace\nviera\traciex-thick\images\nssm\win32\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Workspace\nviera\traciex-thick\images\nssm\win64\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Workspace\nviera\traciex-thick\build\*.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
