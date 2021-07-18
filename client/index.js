@@ -53,7 +53,7 @@ readInputs().then(() => {
       !file.includes("raman-results") && apiService.uploadFile(file);
     })
     .on("error", function (error) {
-      console.error("Error happened", error);
+      global.logger.error("Error happened", error);
     });
 
   whiteboard.subscribe("mount_file");
