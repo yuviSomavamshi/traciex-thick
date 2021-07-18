@@ -26,7 +26,7 @@ module.exports = {
       redis: null, // initial value, when no connection is yet attempted.
       status: 0 // status of connection.
     };
-    console.warn("Register redisprop(" + props.key + ") " + JSON.stringify(redisPool[props.key]));
+    global.logger.warn("Register redisprop(" + props.key + ") " + JSON.stringify(redisPool[props.key]));
   },
 
   getConnection: (key) => {

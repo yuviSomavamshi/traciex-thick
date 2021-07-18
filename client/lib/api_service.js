@@ -43,7 +43,7 @@ function downloadFile(payload) {
         }
       );
     } catch (e) {
-      console.error(e);
+      global.logger.error(e);
     }
   });
 }
@@ -92,32 +92,36 @@ function uploadDiagnosis(payload, date, name, currFilePath) {
 
 function uploadFile(file) {
   return new Promise((resolve) => {
-    global.logger.info(`Uploading file:${file}`);
-    request(
-      {
-        url: "https://traciex.healthx.global/api/v1/raman/uploadByRaman",
-        method: "POST",
-        formData: {
-          file: [fs.createReadStream(path.resolve(file))]
+    try {
+      global.logger.info(`Uploading file:${file}`);
+      request(
+        {
+          url: "https://traciex.healthx.global/api/v1/raman/uploadByRaman",
+          method: "POST",
+          formData: {
+            file: [fs.createReadStream(path.resolve(file))]
+          },
+          timeout: 5000,
+          strictSSL: false,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Accept-Charset": "utf-8",
+            "x-api-key": API_KEY.getKey(),
+            "x-client-id": process.env.CLIENT_ID,
+            "x-loc": process.env.LOCATION
+          },
+          agent: keepAliveAgent,
+          time: true
         },
-        timeout: 5000,
-        strictSSL: false,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Accept-Charset": "utf-8",
-          "x-api-key": API_KEY.getKey(),
-          "x-client-id": process.env.CLIENT_ID,
-          "x-loc": process.env.LOCATION
-        },
-        agent: keepAliveAgent,
-        time: true
-      },
-      function (err, response, body) {
-        global.logger.trace(`File upload statuscode:${response.statusCode}`);
-        resolve({ statusCode: response.statusCode, body });
-      }
-    );
+        function (err, response, body) {
+          global.logger.error(`File upload statuscode:${body}`);
+          resolve({ statusCode: response.statusCode, body });
+        }
+      );
+    } catch (e) {
+      global.logger.error(e);
+    }
   });
 }
 

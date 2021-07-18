@@ -36,14 +36,16 @@ readInputs().then(() => {
     global.logger.info(`Processed path ::: ${global.destinationPath}`);
     global.logger.info(`Corrupted files/unprocessed :: ${global.unprocessed}`);
   } catch (e) {
-    //ignore
-    console.error(e);
+    global.logger.error(e);
   }
 
-  const JobProcessor = require("./jobProcessor");
-  const job = new CronJob("*/10 * * * * *", JobProcessor);
-  job.start();
-  global.logger.info(global.raman);
+  try {
+    const JobProcessor = require("./jobProcessor");
+    const job = new CronJob("*/10 * * * * *", JobProcessor);
+    job.start();
+  } catch (error) {
+    global.logger.error(error);
+  }
   const watcher = chokidar.watch(global.raman, { ignored: /^\./, persistent: true });
   watcher
     .on("add", function (file) {

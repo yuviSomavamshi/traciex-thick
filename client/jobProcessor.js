@@ -42,7 +42,7 @@ module.exports = function () {
       if (err.errno == -4058) {
         mkdirp.sync(location);
       } else {
-        console.error("error while read file ", err);
+        global.logger.error("error while read file ", err);
       }
     });
 };

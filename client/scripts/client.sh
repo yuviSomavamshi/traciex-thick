@@ -8,7 +8,7 @@ export SETUP_PROCESSED_DIR=/home/pi/data/processed;
 export SETUP_SEER_RAMAN=/home/pi/data/raman;
 export API_KEY='23423432423,3453454343';
 export LOCATION='VivoCity backgate'
-export CLIENT_ID='b5a3d5c5-821c-40e3-9f47-57c8ec9e9254'
+export CLIENT_ID='ee125b02-6f2e-413c-b1f0-896f3f6c722e'
 
 PIDFILE="/tmp/thickclient.pid"
 LOG_FILE="/tmp/thickclient.log"

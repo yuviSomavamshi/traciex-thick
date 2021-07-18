@@ -17,7 +17,7 @@ class RedisKeySpaceNotifier extends EventEmitter {
     this.subscriber.on(
       "ready",
       function () {
-        console.warn("Subscribing to Redis keyspace:", subscriptionKey);
+        global.logger.warn("Subscribing to Redis keyspace:", subscriptionKey);
         this.subscriber.select(opts.db || 0);
         this.subscriber.psubscribe(subscriptionKey);
       }.bind(this)
