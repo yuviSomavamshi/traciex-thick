@@ -5,7 +5,7 @@ const apiService = require("./lib/api_service");
 const redis_man = require("./lib/redis_man");
 module.exports = function () {
   global.logger.debug("running a task every 10 second ");
-  redis_man.getConnection().then(async conn => console.log(await conn.ping()));
+  redis_man.getConnection().then(async (conn) => await conn.ping());
 
   // Function to get the filenames present
   // in the directory

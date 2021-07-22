@@ -35,11 +35,16 @@ function downloadFile(payload) {
           time: true
         },
         function (err, response, body) {
-          if (response.statusCode == 200) {
-            let filename = path.join(global.raman, payload.file);
-            fs.writeFileSync(filename, body);
+          if (!err) {
+            if (response.statusCode == 200) {
+              let filename = path.join(global.raman, payload.file);
+              fs.writeFileSync(filename, body);
+            }
+            resolve({ statusCode: response.statusCode, body });
+          } else {
+            global.logger.error(err);
+            resolve({ statusCode: err.statusCode });
           }
-          resolve({ statusCode: response.statusCode, body });
         }
       );
     } catch (e) {
