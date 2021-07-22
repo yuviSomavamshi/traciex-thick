@@ -42,14 +42,24 @@ module.exports = {
       if (conn && conn.redis != null && conn.status == 1) {
         resolve(conn.redis);
       } else {
-        conn.config.retry_strategy = RedisRetryStrategy();
-        conn.redis = new RedisStore(conn.config);
+        //conn.config.retryStrategy = RedisRetryStrategy();
+        conn.redis = new RedisStore({
+          ...conn.config,
+          retryStrategy(times) {
+            return Math.min(times * 1000, 5000);
+          },
+          maxRetriesPerRequest: null
+        });
         conn.redis.setMaxListeners(100);
         conn.redis.on("ready", () => {
+          console.log("ready");
           //OAM.emit("clearAlert", conn.oid);
           if (conn.status !== 1) subscribe(conn.redis);
           conn.status = 1;
           return resolve(conn.redis);
+        });
+        conn.redis.on("reconnecting", () => {
+          console.log("reconnecting");
         });
 
         conn.redis.on("error", (e) => {
