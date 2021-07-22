@@ -4,16 +4,9 @@ const log4js = require("log4js");
 let source, destination, raman;
 let defaultPath = process.env.DATA_FOLDER || "C://Data";
 const chokidar = require("chokidar");
-const whiteboard = require("./lib/whiteboad");
+const redis_man = require("./lib/redis_man");
 const mkdirp = require("mkdirp");
 const apiService = require("./lib/api_service");
-
-whiteboard.init({
-  host: "52.237.82.94",
-  port: 6379,
-  db: 0,
-  password: "HealthX!Chain123BLR"
-});
 
 log4js.configure({
   appenders: {
@@ -26,6 +19,17 @@ log4js.configure({
 global.logger = log4js.getLogger();
 global.logger.info("Version:" + require("./package.json").version);
 
+redis_man.init({
+  config: {
+    host: "52.237.82.94",
+    port: 6379,
+    db: 0,
+    password: "HealthX!Chain123BLR"
+  }
+});
+redis_man.getConnection().then((con) => {
+  con && global.logger.warn("Redis event Subscribed");
+});
 readInputs().then(() => {
   try {
     if (global.sourcePath == global.destinationPath) {
@@ -56,7 +60,6 @@ readInputs().then(() => {
       global.logger.error("Error happened", error);
     });
 
-  whiteboard.subscribe("mount_file");
   global.logger.info("Process started...");
 });
 
@@ -86,10 +89,10 @@ function readInputs() {
 
     raman = (process.env.SETUP_SEER_RAMAN && path.resolve(process.env.SETUP_SEER_RAMAN)) || path.join(global.sourcePath, "raman");
     global.raman = path.resolve(raman);
-    console.log(`Source path      : ${global.sourcePath}`);
-    console.log(`Destination path : ${global.destinationPath}`);
-    console.log(`Unprocessed path : ${global.unprocessed}`);
-    console.log(`Raman CSV path   : ${global.raman}`);
+    global.logger.info(`Source path      : ${global.sourcePath}`);
+    global.logger.info(`Destination path : ${global.destinationPath}`);
+    global.logger.info(`Unprocessed path : ${global.unprocessed}`);
+    global.logger.info(`Raman CSV path   : ${global.raman}`);
     mkdirp.sync(global.raman);
     mkdirp.sync(global.destinationPath);
     mkdirp.sync(global.sourcePath);

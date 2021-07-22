@@ -13,11 +13,6 @@ class Whiteboard extends EventEmitter {
       oid: WB
     });
 
-    redis_man.init({
-      key: WBPUBLISH,
-      config: opts,
-      oid: WB
-    });
     this.opts = opts;
     let connection = await redis_man.getConnection(WBSUBSCRIBE);
     connection.on("message", (channel, data) => {
@@ -35,7 +30,6 @@ class Whiteboard extends EventEmitter {
           break;
       }
     });
-    connection = await redis_man.getConnection(WBPUBLISH);
   }
 
   async publish(event, message) {

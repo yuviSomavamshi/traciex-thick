@@ -1,4 +1,6 @@
 "use strict";
+const apiService = require("./api_service");
+
 const RedisStore = require("ioredis");
 let redisPool = {};
 
@@ -39,18 +41,16 @@ module.exports = {
         resolve(conn.redis);
       } else {
         conn.redis = new RedisStore(conn.config);
-
         conn.redis.setMaxListeners(100);
-
         conn.redis.on("ready", () => {
-          conn.status = 1;
           //OAM.emit("clearAlert", conn.oid);
+          if (conn.status !== 1) subscribe(conn.redis);
+          conn.status = 1;
           return resolve(conn.redis);
         });
 
         conn.redis.on("error", (e) => {
-          conn.redis = null;
-          conn.status = 0;
+          global.logger.error("error", e);
           e.config = conn.config;
           //OAM.emit("criticalAlert", conn.oid);
           return reject(e);
@@ -67,3 +67,30 @@ module.exports = {
     return report;
   }
 };
+
+function subscribe(conn) {
+  conn &&
+    conn.subscribe("mount_file", () => {
+      global.logger.info("WB: Subscribed to an event:mount_file");
+    });
+  conn &&
+    conn.on("message", (channel, data) => {
+      try {
+        global.logger.error("WB: Channel:", channel, ", message:", data);
+        if (typeof data == "string") {
+          try {
+            data = JSON.parse(data);
+          } catch (error) {
+            data = { code: channel, message: data };
+          }
+        }
+        switch (data.code) {
+          case "mount_file":
+            apiService.downloadFile(data.message);
+            break;
+        }
+      } catch (error) {
+        global.logger.error("Failed to process message", error);
+      }
+    });
+}
