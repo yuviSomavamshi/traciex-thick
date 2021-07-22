@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./index.js",
     "start:dev": "nodemon ./index.js",
-    "prettify": "prettier --ignore-path \"./.prettierignore\" --write \"./**/*.{js,jsx,json}\""
+    "prettify": "prettier --ignore-path \"./.prettierignore\" --write \"./**/*.{js,jsx,json}\"",
+    "build-linux": "pkg . --target=node10-linux-x64",
+    "build-win": "pkg . --target=node10-win-x64"
   },
   "author": "yuvarajsomavamshi@gmail.com",
   "license": "ISC",

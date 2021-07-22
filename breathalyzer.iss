@@ -27,11 +27,11 @@ DefaultDirName=C:\Program Files\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputBaseFilename=Breathalyzer-ThickClient-{#MyAppVersion}
-;SetupIconFile="D:\Workspace\nviera\traciex-thick\\images\HealthX.ico
+;SetupIconFile="D:\Workspace\nviera\traciex-thick\images\HealthX.ico
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-;WizardImageFile="D:\Workspace\nviera\traciex-thick\\images\untitled.bmp
+;WizardImageFile="D:\Workspace\nviera\traciex-thick\images\untitled.bmp
 UninstallFilesDir={app}\Uninstall
 DisableWelcomePage=yes
 
