@@ -2,6 +2,8 @@
 const apiService = require("./api_service");
 
 const RedisStore = require("ioredis");
+const RedisRetryStrategy = require("./RedisRetryStrategy");
+
 let redisPool = {};
 
 //const OAM = require("oam");
@@ -40,6 +42,7 @@ module.exports = {
       if (conn && conn.redis != null && conn.status == 1) {
         resolve(conn.redis);
       } else {
+        conn.config.retry_strategy = RedisRetryStrategy();
         conn.redis = new RedisStore(conn.config);
         conn.redis.setMaxListeners(100);
         conn.redis.on("ready", () => {
